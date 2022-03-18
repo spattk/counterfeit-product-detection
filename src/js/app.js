@@ -52,19 +52,19 @@ App = {
     // Load contract data
     App.contracts.ProductTracking.deployed().then(function(instance) {
       productTrackingInstance = instance;
-      return productTrackingInstance.candidatesCount();
-    }).then(function(candidatesCount) {
+      return productTrackingInstance.productsCount();
+    }).then(function(productsCount) {
       var candidatesResults = $("#candidatesResults");
       candidatesResults.empty();
   
       var candidatesSelect = $('#candidatesSelect');
       candidatesSelect.empty();
   
-      for (var i = 1; i <= candidatesCount; i++) {
-        productTrackingInstance.candidates(i).then(function(candidate) {
-          var id = candidate[0];
-          var name = candidate[1];
-          var voteCount = candidate[2];
+      for (var i = 1; i <= productsCount; i++) {
+        productTrackingInstance.products(i).then(function(product) {
+          var id = product[0];
+          var name = product[1];
+          var voteCount = product[2];
           if(voteCount == 0)
             voteCount = 'IN-WAREHOUSE';
           else if(voteCount > 0)
