@@ -42,12 +42,23 @@ App = {
     content.hide();
   
     // Load account data
-    web3.eth.getCoinbase(function(err, account) {
+    /*web3.eth.getCoinbase(function(err, account) {
       if (err === null) {
         App.account = account;
         $("#accountAddress").html("Your Account: " + account);
       }
-    });
+    });*/
+
+    if(web3.currentProvider.enable){
+      //For metamask
+      web3.currentProvider.enable().then(function(acc){
+          App.account = acc[0];
+          $("#accountAddress").html("Your Account: " + App.account);
+      });
+  } else{
+      App.account = web3.eth.accounts[0];
+      $("#accountAddress").html("Your Account: " + App.account);
+  }
   
     // Load contract data
     App.contracts.ProductTracking.deployed().then(function(instance) {
