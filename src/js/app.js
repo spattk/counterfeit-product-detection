@@ -40,14 +40,17 @@ App = {
   
     loader.show();
     content.hide();
-  
-    // Load account data
-    web3.eth.getCoinbase(function(err, account) {
-      if (err === null) {
-        App.account = account;
-        $("#accountAddress").html("Your Account: " + account);
-      }
-    });
+
+    if(web3.currentProvider.enable){
+      //For metamask
+      web3.currentProvider.enable().then(function(acc){
+          App.account = acc[0];
+          $("#accountAddress").html("Your Account: " + App.account);
+      });
+    } else{
+      App.account = web3.eth.accounts[0];
+      $("#accountAddress").html("Your Account: " + App.account);
+    }
   
     // Load contract data
     App.contracts.ProductTracking.deployed().then(function(instance) {
@@ -65,10 +68,10 @@ App = {
           var id = product[0];
           var name = product[1];
           var voteCount = product[2];
-          if(voteCount == 0)
-            voteCount = 'IN-WAREHOUSE';
-          else if(voteCount > 0)
-            voteCount = 'IN-TRANSIT';
+          // if(voteCount == 0)
+          //   voteCount = 'IN-WAREHOUSE';
+          // else if(voteCount > 0)
+          //   voteCount = 'IN-TRANSIT';
   
           // Render candidate Result
           var candidateTemplate = "<tr><th>" + id + "</th><td>" + name + "</td><td>" + voteCount + "</td></tr>"
@@ -83,7 +86,7 @@ App = {
     }).then(function(hasVoted) {
       // Do not allow a user to vote
       if(hasVoted) {
-        $('form').hide();
+        //$('form').hide();
       }
       loader.hide();
       content.show();
